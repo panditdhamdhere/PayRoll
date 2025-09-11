@@ -59,25 +59,25 @@ export function YieldView() {
         <h2 className="text-2xl font-semibold">Yield Generation</h2>
       </div>
 
-      <div className="rounded-xl p-6 border border-white/20 dark:border-white/10 bg-white/70 dark:bg-white/5 backdrop-blur-xl">
+      <div className="rounded-xl p-6 border border-gray-200/50 dark:border-gray-700/50 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl shadow-lg">
         <h3 className="text-lg font-semibold mb-4">Deposit / Withdraw</h3>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <input
             value={token}
             onChange={(e) => setToken(e.target.value)}
             placeholder="Token address (0x...)"
-            className="px-3 py-2 rounded-lg border border-white/20 dark:border-white/10 bg-white/70 dark:bg-white/5 text-gray-900 dark:text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-3 py-2 rounded-lg border border-gray-300/50 dark:border-gray-600/50 bg-white/90 dark:bg-gray-800/90 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
           />
           <input
             value={amount}
             onChange={(e) => setAmount(e.target.value.replace(/\D/g, ''))}
             placeholder="Amount (wei)"
-            className="px-3 py-2 rounded-lg border border-white/20 dark:border-white/10 bg-white/70 dark:bg-white/5 text-gray-900 dark:text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-3 py-2 rounded-lg border border-gray-300/50 dark:border-gray-600/50 bg-white/90 dark:bg-gray-800/90 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
           />
           <select
             value={protocol}
             onChange={(e) => setProtocol(e.target.value)}
-            className="px-3 py-2 rounded-lg border border-white/20 dark:border-white/10 bg-white/70 dark:bg-white/5 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-3 py-2 rounded-lg border border-gray-300/50 dark:border-gray-600/50 bg-white/90 dark:bg-gray-800/90 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
           >
             <option value="Aave">Aave</option>
             <option value="Compound">Compound</option>
@@ -87,12 +87,12 @@ export function YieldView() {
             value={apy}
             onChange={(e) => setApy(e.target.value.replace(/\D/g, ''))}
             placeholder="APY (bps)"
-            className="px-3 py-2 rounded-lg border border-white/20 dark:border-white/10 bg-white/70 dark:bg-white/5 text-gray-900 dark:text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="px-3 py-2 rounded-lg border border-gray-300/50 dark:border-gray-600/50 bg-white/90 dark:bg-gray-800/90 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
           />
         </div>
         <div className="mt-4 flex gap-3">
           <button
-            className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 transition-colors disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 focus:ring-offset-white/60 dark:focus:ring-offset-black/40"
+            className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 focus:ring-offset-white/60 dark:focus:ring-offset-black/40 shadow-lg font-medium"
             disabled={!token || !amount}
             onClick={async () => {
               try {
@@ -107,7 +107,7 @@ export function YieldView() {
             Deposit
           </button>
           <button
-            className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-white/60 dark:focus:ring-offset-black/40"
+            className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-white/60 dark:focus:ring-offset-black/40 shadow-lg font-medium"
             disabled={!token || !amount}
             onClick={async () => {
               try {
@@ -125,13 +125,13 @@ export function YieldView() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="rounded-lg p-6 border border-white/20 dark:border-white/10 bg-white/70 dark:bg-white/5 backdrop-blur-xl">
+        <div className="rounded-lg p-6 border border-gray-200/50 dark:border-gray-700/50 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl shadow-lg">
           <p className="text-sm text-green-700 dark:text-green-400 font-medium">Available Balance</p>
           <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
             {token ? (availableBalance.data ? (Number(availableBalance.data as any) / 1e18).toFixed(6) : '—') : '—'}
           </p>
         </div>
-        <div className="rounded-lg p-6 border border-white/20 dark:border-white/10 bg-white/70 dark:bg-white/5 backdrop-blur-xl">
+        <div className="rounded-lg p-6 border border-gray-200/50 dark:border-gray-700/50 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl shadow-lg">
           <p className="text-sm text-blue-700 dark:text-blue-400 font-medium">Total Yield Generated</p>
           <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
             {token ? (totalYield.data ? (Number(totalYield.data as any) / 1e18).toFixed(6) : '—') : '—'}
