@@ -1,60 +1,44 @@
 'use client';
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import { motion } from 'framer-motion';
 
 export function Hero() {
   return (
-    <section className="text-center py-20">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-5xl md:text-6xl font-bold mb-6">
+    <section className="relative overflow-hidden py-20 md:py-28">
+      <div aria-hidden className="pointer-events-none absolute -top-32 right-[-10%] h-[480px] w-[480px] rounded-full bg-gradient-to-br from-blue-500/40 via-purple-500/40 to-pink-500/30 blur-3xl" />
+      <div className="max-w-5xl mx-auto px-4 text-center relative">
+        <motion.h1
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-5xl md:text-6xl font-extrabold tracking-tight mb-6"
+        >
           <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-            Web3 Salary Streaming
+            Decentralized Payroll, Reimagined
           </span>
-        </h1>
-        
-        <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-          Stream salaries by the second with automatic tax withholding, 
-          DeFi yield generation, and DAO governance token distribution.
-        </p>
-        
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.05 }}
+          className="text-lg md:text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto mb-10"
+        >
+          Stream salaries by the second with automatic tax withholding, DeFi yield on idle funds, and DAO governance—all in one secure protocol.
+        </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+        >
           <ConnectButton />
-          <button className="px-8 py-3 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+          <a href="#features" className="px-6 py-3 rounded-lg border border-white/30 dark:border-white/10 bg-white/70 dark:bg-white/10 text-gray-900 dark:text-white hover:bg-white/80 dark:hover:bg-white/15 transition-colors">
             Learn More
-          </button>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
-          <div className="bg-white/60 backdrop-blur-sm rounded-xl p-6 border border-gray-200">
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4 mx-auto">
-              <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-              </svg>
-            </div>
-            <h3 className="text-lg font-semibold mb-2">Real-time Streaming</h3>
-            <p className="text-gray-600">Salaries stream every second, just like Sablier but enhanced</p>
-          </div>
-          
-          <div className="bg-white/60 backdrop-blur-sm rounded-xl p-6 border border-gray-200">
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4 mx-auto">
-              <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-              </svg>
-            </div>
-            <h3 className="text-lg font-semibold mb-2">DeFi Yield</h3>
-            <p className="text-gray-600">Automatic yield generation on unstreamed funds</p>
-          </div>
-          
-          <div className="bg-white/60 backdrop-blur-sm rounded-xl p-6 border border-gray-200">
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4 mx-auto">
-              <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <h3 className="text-lg font-semibold mb-2">Tax Compliance</h3>
-            <p className="text-gray-600">Built-in tax calculation and automatic withholding</p>
-          </div>
-        </div>
+          </a>
+        </motion.div>
       </div>
     </section>
   );

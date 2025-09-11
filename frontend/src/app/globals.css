@@ -6,6 +6,10 @@
   --bg-from: #ebf2ff; /* blue-50 */
   --bg-via: #ffffff;
   --bg-to: #f5f3ff;   /* purple-50 */
+  --card: rgba(255,255,255,0.75);
+  --card-dark: rgba(17,24,39,0.7);
+  --border: rgba(255,255,255,0.12);
+  --ring: rgba(59,130,246,0.5);
 }
 
 .dark {
@@ -14,6 +18,10 @@
   --bg-from: #0b1220; /* gray-950-ish */
   --bg-via: #0a0f1a;
   --bg-to: #000000;
+  --card: rgba(255,255,255,0.06);
+  --card-dark: rgba(3,7,18,0.7);
+  --border: rgba(255,255,255,0.06);
+  --ring: rgba(96,165,250,0.5);
 }
 
 @theme inline {
@@ -31,6 +39,7 @@
   }
 }
 
+/* Base document styling */
 body {
   background: var(--background);
   color: var(--foreground);
@@ -39,6 +48,46 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   font-smooth: always;
-  background-image: linear-gradient(to bottom right, var(--bg-from), var(--bg-via), var(--bg-to));
   min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Layered gradient backdrop */
+body::before {
+  content: "";
+  position: fixed;
+  inset: -10% -10% -10% -10%;
+  z-index: -2;
+  background-image:
+    radial-gradient(60% 40% at 20% 10%, rgba(59,130,246,0.25), transparent 60%),
+    radial-gradient(50% 35% at 80% 0%, rgba(147,51,234,0.22), transparent 60%),
+    radial-gradient(60% 45% at 50% 100%, rgba(236,72,153,0.18), transparent 60%),
+    linear-gradient(to bottom right, var(--bg-from), var(--bg-via), var(--bg-to));
+  filter: saturate(1.1);
+}
+
+/* Subtle noise for depth */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)' opacity='.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* Accessible selection and focus styles */
+::selection {
+  background: rgba(59,130,246,0.2);
+}
+
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Containers */
+.container {
+  max-width: 1200px;
 }
