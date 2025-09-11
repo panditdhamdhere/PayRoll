@@ -7,14 +7,12 @@ import { EmployeeView } from './EmployeeView';
 import { EmployerView } from './EmployerView';
 import { YieldView } from './YieldView';
 import { DAOView } from './DAOView';
-import { ContractTest } from './ContractTest';
 
 export function Dashboard() {
   const { address } = useAccount();
   const [activeTab, setActiveTab] = useState('employee');
 
   const tabs = [
-    { id: 'test', label: 'Test', icon: '🔧' },
     { id: 'employee', label: 'Employee', icon: '👤' },
     { id: 'employer', label: 'Employer', icon: '🏢' },
     { id: 'yield', label: 'Yield', icon: '📈' },
@@ -64,11 +62,6 @@ export function Dashboard() {
 
           <div className="p-6">
             <AnimatePresence mode="wait">
-              {activeTab === 'test' && (
-                <motion.div key="test" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
-                  <ContractTest />
-                </motion.div>
-              )}
               {activeTab === 'employee' && (
                 <motion.div key="employee" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
                   <EmployeeView />
