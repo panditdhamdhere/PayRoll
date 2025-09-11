@@ -99,7 +99,7 @@ export function EmployerView() {
         <h2 className="text-2xl font-semibold">Employee Management</h2>
       </div>
 
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+      <div className="rounded-xl p-6 border border-white/20 dark:border-white/10 bg-white/70 dark:bg-white/5 backdrop-blur-xl">
         <h3 className="text-lg font-semibold mb-4">Create New Salary Stream</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
@@ -108,7 +108,7 @@ export function EmployerView() {
               value={employeeId}
               onChange={(e) => setEmployeeId(e.target.value.replace(/\D/g, ''))}
               type="text"
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
+              className="w-full px-3 py-2 rounded-lg border border-white/20 dark:border-white/10 bg-white/70 dark:bg-white/5 text-gray-900 dark:text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="e.g. 1"
             />
           </div>
@@ -118,7 +118,7 @@ export function EmployerView() {
               value={tokenAddress}
               onChange={(e) => setTokenAddress(e.target.value)}
               type="text"
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
+              className="w-full px-3 py-2 rounded-lg border border-white/20 dark:border-white/10 bg-white/70 dark:bg-white/5 text-gray-900 dark:text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="0x..."
             />
           </div>
@@ -128,14 +128,14 @@ export function EmployerView() {
               value={totalAmount}
               onChange={(e) => setTotalAmount(e.target.value.replace(/\D/g, ''))}
               type="text"
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
+              className="w-full px-3 py-2 rounded-lg border border-white/20 dark:border-white/10 bg-white/70 dark:bg-white/5 text-gray-900 dark:text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="1000000000000000000"
             />
           </div>
         </div>
-        <div className="mt-4 flex space-x-3">
+        <div className="mt-4 flex gap-3">
           <button
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+            className="px-6 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-white/60 dark:focus:ring-offset-black/40"
             disabled={!employeeId || !tokenAddress || !totalAmount}
             onClick={async () => {
               try {
@@ -156,7 +156,7 @@ export function EmployerView() {
         <h3 className="text-lg font-semibold mb-4">Your Active Streams</h3>
         <div className="space-y-3">
           {displayStreams.map((stream) => (
-            <div key={stream.id} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+            <div key={stream.id} className="rounded-xl p-4 border border-white/20 dark:border-white/10 bg-white/70 dark:bg-white/5 backdrop-blur-xl">
               <div className="flex justify-between items-start">
                 <div>
                   <h4 className="font-semibold">Stream #{stream.id}</h4>

@@ -70,7 +70,7 @@ export function DAOView() {
         <h3 className="text-lg font-semibold mb-4">Your Token Allocations</h3>
         <div className="space-y-4">
           {displayAllocations.map((allocation) => (
-            <div key={allocation.id} className="bg-white border border-gray-200 rounded-lg p-6">
+            <div key={allocation.id} className="rounded-xl p-6 border border-white/20 dark:border-white/10 bg-white/70 dark:bg-white/5 backdrop-blur-xl">
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <h4 className="text-lg font-semibold">Allocation #{allocation.id}</h4>
@@ -93,7 +93,7 @@ export function DAOView() {
                 </div>
                 <button
                   disabled={allocation.claimable === 0n}
-                  className={`px-4 py-2 rounded-lg transition-colors ${allocation.claimable > 0n ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
+                  className={`px-4 py-2 rounded-lg transition-colors ${allocation.claimable > 0n ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-300 text-gray-500 cursor-not-allowed'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-white/60 dark:focus:ring-offset-black/40`}
                   onClick={async () => {
                     try {
                       toast.loading(`Claiming allocation #${allocation.id}...`, { id: `dao-claim-${allocation.id}` });
@@ -112,17 +112,17 @@ export function DAOView() {
         </div>
       </div>
 
-      <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
+      <div className="rounded-xl p-6 border border-white/20 dark:border-white/10 bg-white/70 dark:bg-white/5 backdrop-blur-xl">
         <h3 className="text-lg font-semibold mb-4">Quick Actions</h3>
         <div className="flex gap-3">
           <input
             value={allocationIdInput}
             onChange={(e) => setAllocationIdInput(e.target.value.replace(/\D/g, ''))}
             placeholder="Allocation ID"
-            className="px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg text-sm w-40 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
+            className="px-3 py-2 rounded-lg text-sm w-40 border border-white/20 dark:border-white/10 bg-white/70 dark:bg-white/5 text-gray-900 dark:text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-white/60 dark:focus:ring-offset-black/40"
             disabled={!allocationIdInput}
             onClick={async () => {
               try {

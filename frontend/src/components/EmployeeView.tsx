@@ -117,11 +117,11 @@ export function EmployeeView() {
             value={employeeIdInput}
             onChange={(e) => setEmployeeIdInput(e.target.value.replace(/\D/g, ''))}
             placeholder="Employee ID"
-            className="px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg text-sm w-36 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
+            className="px-3 py-2 rounded-lg text-sm w-36 border border-white/20 dark:border-white/10 bg-white/70 dark:bg-white/5 text-gray-900 dark:text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
             disabled={!employeeIdInput || displayStreams.length === 0}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+            className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-white/60 dark:focus:ring-offset-black/40"
             onClick={async () => {
               if (!employeeIdInput) return;
               for (const s of displayStreams) {
@@ -149,7 +149,7 @@ export function EmployeeView() {
       ) : (
         <div className="grid gap-6">
           {displayStreams.map((stream) => (
-            <div key={stream.id} className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
+            <div key={stream.id} className="rounded-xl p-6 border border-white/20 dark:border-white/10 bg-white/70 dark:bg-white/5 backdrop-blur-xl">
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <h3 className="text-lg font-semibold">Stream #{stream.id}</h3>
@@ -186,7 +186,7 @@ export function EmployeeView() {
                 </div>
                 <button
                   disabled={!employeeIdInput || !stream.isActive}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
+                  className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-white/60 dark:focus:ring-offset-black/40"
                   onClick={async () => {
                     if (!employeeIdInput) return;
                     try {
