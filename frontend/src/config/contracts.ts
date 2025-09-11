@@ -15,13 +15,13 @@ export const NETWORK_CONFIG = {
 // Supported tokens
 export const SUPPORTED_TOKENS = {
   USDC: {
-    address: '0xA0b86a33E6441c8C06DdD5c8c4b7C8c8c8c8c8c8', // Update with actual address
+    address: '0x036CbD53842c5426634e7929541eC2318f3dCF7e',
     symbol: 'USDC',
     decimals: 6,
     name: 'USD Coin'
   },
   DAI: {
-    address: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+    address: '0x8d9cb8f3191fd685e2c14d2ac3fb2b16d44eafc3',
     symbol: 'DAI',
     decimals: 18,
     name: 'Dai Stablecoin'

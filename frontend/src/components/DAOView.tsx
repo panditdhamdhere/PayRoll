@@ -119,7 +119,7 @@ export function DAOView() {
             value={allocationIdInput}
             onChange={(e) => setAllocationIdInput(e.target.value.replace(/\D/g, ''))}
             placeholder="Allocation ID"
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm w-40"
+            className="px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg text-sm w-40 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
           />
           <button
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"

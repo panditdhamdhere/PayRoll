@@ -3,6 +3,17 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --bg-from: #ebf2ff; /* blue-50 */
+  --bg-via: #ffffff;
+  --bg-to: #f5f3ff;   /* purple-50 */
+}
+
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --bg-from: #0b1220; /* gray-950-ish */
+  --bg-via: #0a0f1a;
+  --bg-to: #000000;
 }
 
 @theme inline {
@@ -12,8 +23,9 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* next-themes handles dark class; keep media query as a fallback */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not(.light) {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
@@ -27,4 +39,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   font-smooth: always;
+  background-image: linear-gradient(to bottom right, var(--bg-from), var(--bg-via), var(--bg-to));
+  min-height: 100vh;
 }

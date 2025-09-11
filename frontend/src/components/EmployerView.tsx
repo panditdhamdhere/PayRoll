@@ -108,7 +108,7 @@ export function EmployerView() {
               value={employeeId}
               onChange={(e) => setEmployeeId(e.target.value.replace(/\D/g, ''))}
               type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
               placeholder="e.g. 1"
             />
           </div>
@@ -118,7 +118,7 @@ export function EmployerView() {
               value={tokenAddress}
               onChange={(e) => setTokenAddress(e.target.value)}
               type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
               placeholder="0x..."
             />
           </div>
@@ -128,7 +128,7 @@ export function EmployerView() {
               value={totalAmount}
               onChange={(e) => setTotalAmount(e.target.value.replace(/\D/g, ''))}
               type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
               placeholder="1000000000000000000"
             />
           </div>

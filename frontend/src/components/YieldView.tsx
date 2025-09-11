@@ -66,18 +66,18 @@ export function YieldView() {
             value={token}
             onChange={(e) => setToken(e.target.value)}
             placeholder="Token address (0x...)"
-            className="px-3 py-2 border border-gray-300 rounded-lg"
+            className="px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
           />
           <input
             value={amount}
             onChange={(e) => setAmount(e.target.value.replace(/\D/g, ''))}
             placeholder="Amount (wei)"
-            className="px-3 py-2 border border-gray-300 rounded-lg"
+            className="px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
           />
           <select
             value={protocol}
             onChange={(e) => setProtocol(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-lg"
+            className="px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
           >
             <option value="Aave">Aave</option>
             <option value="Compound">Compound</option>
@@ -87,7 +87,7 @@ export function YieldView() {
             value={apy}
             onChange={(e) => setApy(e.target.value.replace(/\D/g, ''))}
             placeholder="APY (bps)"
-            className="px-3 py-2 border border-gray-300 rounded-lg"
+            className="px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
           />
         </div>
         <div className="mt-4 flex gap-3">

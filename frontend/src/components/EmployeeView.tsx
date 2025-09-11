@@ -117,7 +117,7 @@ export function EmployeeView() {
             value={employeeIdInput}
             onChange={(e) => setEmployeeIdInput(e.target.value.replace(/\D/g, ''))}
             placeholder="Employee ID"
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm w-36"
+            className="px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg text-sm w-36 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500"
           />
           <button
             disabled={!employeeIdInput || displayStreams.length === 0}
@@ -149,7 +149,7 @@ export function EmployeeView() {
       ) : (
         <div className="grid gap-6">
           {displayStreams.map((stream) => (
-            <div key={stream.id} className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+            <div key={stream.id} className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <h3 className="text-lg font-semibold">Stream #{stream.id}</h3>
@@ -163,15 +163,15 @@ export function EmployeeView() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                 <div>
                   <p className="text-sm text-gray-600">Token</p>
-                  <p className="font-semibold">{stream.token}</p>
+                  <p className="font-semibold text-gray-900 dark:text-white">{stream.token}</p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Salary/Second</p>
-                  <p className="font-semibold">{stream.salaryPerSecond} {stream.token}</p>
+                  <p className="font-semibold text-gray-900 dark:text-white">{stream.salaryPerSecond} {stream.token}</p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Total Earned</p>
-                  <p className="font-semibold">{stream.totalEarned} {stream.token}</p>
+                  <p className="font-semibold text-gray-900 dark:text-white">{stream.totalEarned} {stream.token}</p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Claimable</p>
