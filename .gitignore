@@ -1,0 +1,44 @@
+# Root gitignore for monorepo (contracts + frontend)
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Env files (keep examples)
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/env.example
+!**/deploy.config.example
+
+# Node / Next.js (frontend)
+frontend/node_modules/
+frontend/.next/
+frontend/.turbo/
+frontend/.vercel/
+frontend/out/
+frontend/dist/
+frontend/.eslintcache
+
+# Foundry / Solidity (contracts)
+contracts/out/
+contracts/cache/
+contracts/broadcast/
+contracts/lib/
+contracts/.foundry*
+contracts/artifacts/
+contracts/*.tsbuildinfo
+
+# Misc
+coverage/
