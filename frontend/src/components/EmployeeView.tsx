@@ -144,7 +144,7 @@ export function EmployeeView() {
         <div className="text-center py-12">
           <div className="text-6xl mb-4">⏳</div>
           <h3 className="text-xl font-semibold mb-2">Loading...</h3>
-          <p className="text-gray-600">Fetching your salary streams...</p>
+          <p className="text-black dark:text-gray-600">Fetching your salary streams...</p>
         </div>
       ) : (
         <div className="grid gap-6">
@@ -153,7 +153,7 @@ export function EmployeeView() {
               <div className="flex justify-between items-start mb-4">
                 <div>
                   <h3 className="text-lg font-semibold">Stream #{stream.id}</h3>
-                  <p className="text-gray-600">Employer: {stream.employer}</p>
+                  <p className="text-black dark:text-gray-600">Employer: {stream.employer}</p>
                 </div>
                 <span className={`px-3 py-1 rounded-full text-sm font-medium ${stream.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-200 text-gray-700'}`}>
                   {stream.isActive ? 'Active' : 'Inactive'}
@@ -162,25 +162,25 @@ export function EmployeeView() {
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                 <div>
-                  <p className="text-sm text-gray-600">Token</p>
+                  <p className="text-sm text-black dark:text-gray-600">Token</p>
                   <p className="font-semibold text-gray-900 dark:text-white">{stream.token}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Salary/Second</p>
+                  <p className="text-sm text-black dark:text-gray-600">Salary/Second</p>
                   <p className="font-semibold text-gray-900 dark:text-white">{stream.salaryPerSecond} {stream.token}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Total Earned</p>
+                  <p className="text-sm text-black dark:text-gray-600">Total Earned</p>
                   <p className="font-semibold text-gray-900 dark:text-white">{stream.totalEarned} {stream.token}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Claimable</p>
+                  <p className="text-sm text-black dark:text-gray-600">Claimable</p>
                   <p className="font-semibold text-green-600">{typeof stream.claimable === 'bigint' ? (Number(stream.claimable) / 1e18).toFixed(6) : stream.claimable} {stream.token}</p>
                 </div>
               </div>
 
               <div className="flex justify-between items-center">
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-black dark:text-gray-600">
                   <p>Employee ID: {employeeIdInput || '—'}</p>
                   <p>Period: {stream.startTime ? new Date(stream.startTime * 1000).toLocaleString() : '—'} to {stream.endTime ? new Date(stream.endTime * 1000).toLocaleString() : '—'}</p>
                 </div>
@@ -210,7 +210,7 @@ export function EmployeeView() {
         <div className="text-center py-12">
           <div className="text-6xl mb-4">💼</div>
           <h3 className="text-xl font-semibold mb-2">No Active Streams</h3>
-          <p className="text-gray-600">You don't have any active salary streams yet.</p>
+          <p className="text-black dark:text-gray-600">You don't have any active salary streams yet.</p>
         </div>
       )}
     </div>

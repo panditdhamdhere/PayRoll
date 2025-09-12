@@ -82,13 +82,13 @@ export function DAOView() {
 
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                 <div>
-                  <p className="text-sm text-gray-600">Claimable Now</p>
+                  <p className="text-sm text-black dark:text-gray-600">Claimable Now</p>
                   <p className="font-semibold text-green-600">{typeof allocation.claimable === 'bigint' ? (Number(allocation.claimable) / 1e18).toFixed(6) : allocation.claimable}</p>
                 </div>
               </div>
 
               <div className="flex justify-between items-center">
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-black dark:text-gray-600">
                   <p>Holder: {address}</p>
                 </div>
                 <button

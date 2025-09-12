@@ -103,7 +103,7 @@ export function EmployerView() {
         <h3 className="text-lg font-semibold mb-4">Create New Salary Stream</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Employee ID</label>
+            <label className="block text-sm font-medium text-black dark:text-gray-700 mb-2">Employee ID</label>
             <input
               value={employeeId}
               onChange={(e) => setEmployeeId(e.target.value.replace(/\D/g, ''))}
@@ -113,7 +113,7 @@ export function EmployerView() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Token Address</label>
+            <label className="block text-sm font-medium text-black dark:text-gray-700 mb-2">Token Address</label>
             <input
               value={tokenAddress}
               onChange={(e) => setTokenAddress(e.target.value)}
@@ -123,7 +123,7 @@ export function EmployerView() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Total Amount (wei)</label>
+            <label className="block text-sm font-medium text-black dark:text-gray-700 mb-2">Total Amount (wei)</label>
             <input
               value={totalAmount}
               onChange={(e) => setTotalAmount(e.target.value.replace(/\D/g, ''))}
@@ -160,7 +160,7 @@ export function EmployerView() {
               <div className="flex justify-between items-start">
                 <div>
                   <h4 className="font-semibold">Stream #{stream.id}</h4>
-                  <p className="text-sm text-gray-600">Token: {stream.token}</p>
+                  <p className="text-sm text-black dark:text-gray-600">Token: {stream.token}</p>
                 </div>
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${stream.isActive ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-700'}`}>
                   {stream.isActive ? 'Active' : 'Inactive'}
@@ -168,11 +168,11 @@ export function EmployerView() {
               </div>
               <div className="mt-2 space-y-1 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Total Amount:</span>
+                  <span className="text-black dark:text-gray-600">Total Amount:</span>
                   <span className="font-medium">{typeof stream.totalAmount === 'bigint' ? (Number(stream.totalAmount) / 1e18).toFixed(6) : stream.totalAmount} </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Remaining:</span>
+                  <span className="text-black dark:text-gray-600">Remaining:</span>
                   <span className="font-medium">{typeof stream.remainingAmount === 'bigint' ? (Number(stream.remainingAmount) / 1e18).toFixed(6) : stream.remainingAmount}</span>
                 </div>
               </div>

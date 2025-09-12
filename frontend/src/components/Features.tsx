@@ -17,7 +17,7 @@ export function Features() {
           <h2 className="text-4xl font-extrabold mb-3">
             <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Powerful Features</span>
           </h2>
-          <p className="text-lg text-black dark:text-gray-200 max-w-2xl mx-auto">
+          <p className="text-lg max-w-2xl mx-auto" style={{ color: 'black' }}>
             Everything you need for modern, compliant, and efficient payroll in Web3.
           </p>
         </div>
@@ -37,8 +37,8 @@ export function Features() {
                   <span>{feature.icon}</span>
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold mb-1.5 text-black dark:text-white">{feature.title}</h3>
-                  <p className="text-black/80 dark:text-gray-300">{feature.description}</p>
+                  <h3 className="text-lg font-semibold mb-1.5" style={{ color: 'black' }}>{feature.title}</h3>
+                  <p style={{ color: 'black' }}>{feature.description}</p>
                 </div>
               </div>
               <span className="pointer-events-none absolute inset-x-6 bottom-0 h-px bg-gradient-to-r from-transparent via-white/40 dark:via-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
