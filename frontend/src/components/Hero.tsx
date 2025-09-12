@@ -2,8 +2,11 @@
 
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { motion } from 'framer-motion';
+import { useTheme } from 'next-themes';
 
 export function Hero() {
+  const { theme, resolvedTheme } = useTheme();
+  
   return (
     <section className="relative overflow-hidden py-20 md:py-28">
       <div aria-hidden className="pointer-events-none absolute -top-32 right-[-10%] h-[480px] w-[480px] rounded-full bg-gradient-to-br from-blue-500/40 via-purple-500/40 to-pink-500/30 blur-3xl" />
@@ -24,7 +27,7 @@ export function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.05 }}
           className="text-lg md:text-xl max-w-2xl mx-auto mb-10"
-          style={{ color: 'black' }}
+          style={{ color: (resolvedTheme ?? theme) === 'dark' ? 'white' : 'black' }}
         >
           Stream salaries by the second with automatic tax withholding, DeFi yield on idle funds, and DAO governance—all in one secure protocol.
         </motion.p>
