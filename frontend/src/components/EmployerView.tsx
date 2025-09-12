@@ -155,6 +155,7 @@ export function EmployerView() {
             onClick={async () => {
               try {
                 toast.loading('Adding employee...', { id: 'add-employee' });
+                console.log('Adding employee with:', { employeeRecipient, salaryPerSecond, startTime, endTime, taxRate, taxRecipient });
                 await addEmployee(
                   employeeRecipient as `0x${string}`,
                   BigInt(salaryPerSecond),
@@ -172,8 +173,10 @@ export function EmployerView() {
                 setTaxRate('');
                 setTaxRecipient('');
               } catch (err: unknown) {
-                const error = err as { shortMessage?: string; message?: string };
-                toast.error(error?.shortMessage || error?.message || 'Failed to add employee', { id: 'add-employee' });
+                console.error('Add employee error:', err);
+                const error = err as { shortMessage?: string; message?: string; details?: string };
+                const errorMessage = error?.shortMessage || error?.message || error?.details || 'Failed to add employee';
+                toast.error(`Add employee failed: ${errorMessage}`, { id: 'add-employee' });
               }
             }}
           >
@@ -240,15 +243,18 @@ export function EmployerView() {
             onClick={async () => {
               try {
                 toast.loading('Creating stream...', { id: 'create-stream' });
+                console.log('Creating stream with:', { employeeId, tokenAddress, totalAmount });
                 await createStream(BigInt(employeeId), tokenAddress as `0x${string}`, BigInt(totalAmount));
-                toast.success('Stream created', { id: 'create-stream' });
+                toast.success('Stream created successfully!', { id: 'create-stream' });
                 // Reset form
                 setEmployeeId('');
                 setTokenAddress('');
                 setTotalAmount('');
               } catch (err: unknown) {
-                const error = err as { shortMessage?: string; message?: string };
-                toast.error(error?.shortMessage || error?.message || 'Failed to create stream', { id: 'create-stream' });
+                console.error('Create stream error:', err);
+                const error = err as { shortMessage?: string; message?: string; details?: string };
+                const errorMessage = error?.shortMessage || error?.message || error?.details || 'Failed to create stream';
+                toast.error(`Create stream failed: ${errorMessage}`, { id: 'create-stream' });
               }
             }}
           >
