@@ -17,7 +17,7 @@ export function Features() {
           <h2 className="text-4xl font-extrabold mb-3">
             <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Powerful Features</span>
           </h2>
-          <p className="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-700 dark:text-gray-200 max-w-2xl mx-auto">
             Everything you need for modern, compliant, and efficient payroll in Web3.
           </p>
         </div>
