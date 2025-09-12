@@ -23,9 +23,9 @@ export function Header() {
           </a>
 
           <nav className="hidden md:flex items-center gap-5">
-            <a href="#features" className="text-gray-800 dark:text-gray-200 font-medium hover:text-gray-900 dark:hover:text-white transition-colors">Features</a>
-            <a href="#how-it-works" className="text-gray-800 dark:text-gray-200 font-medium hover:text-gray-900 dark:hover:text-white transition-colors">How it Works</a>
-            <a href="#docs" className="text-gray-800 dark:text-gray-200 font-medium hover:text-gray-900 dark:hover:text-white transition-colors">Docs</a>
+            <a href="#features" className="font-extrabold" style={{ color: (resolvedTheme ?? theme) === 'dark' ? 'white' : 'black' }}>Features</a>
+            <a href="#how-it-works" className="font-extrabold" style={{ color: (resolvedTheme ?? theme) === 'dark' ? 'white' : 'black' }}>How it Works</a>
+            <a href="#docs" className="font-extrabold" style={{ color: (resolvedTheme ?? theme) === 'dark' ? 'white' : 'black' }}>Docs</a>
           </nav>
 
           <div className="flex items-center gap-3 shrink-0">
