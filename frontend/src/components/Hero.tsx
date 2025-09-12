@@ -23,7 +23,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.05 }}
-          className="text-lg md:text-xl text-gray-700 dark:text-gray-200 max-w-2xl mx-auto mb-10"
+          className="text-lg md:text-xl text-black dark:text-gray-200 max-w-2xl mx-auto mb-10"
         >
           Stream salaries by the second with automatic tax withholding, DeFi yield on idle funds, and DAO governance—all in one secure protocol.
         </motion.p>
