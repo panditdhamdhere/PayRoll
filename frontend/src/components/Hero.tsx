@@ -39,7 +39,7 @@ export function Hero() {
           className="flex flex-col sm:flex-row gap-4 justify-center items-center"
         >
           <ConnectButton />
-          <a href="#features" className="px-6 py-3 rounded-lg border border-white/30 dark:border-white/10 bg-white/70 dark:bg-white/10 text-gray-900 dark:text-white hover:bg-white/80 dark:hover:bg-white/15 transition-colors">
+          <a href="#features" className="px-6 py-3 rounded-lg border border-gray-300 dark:border-white/10 bg-white dark:bg-white/10 hover:bg-gray-50 dark:hover:bg-white/15 transition-colors shadow-sm" style={{ color: 'black' }}>
             Learn More
           </a>
         </motion.div>

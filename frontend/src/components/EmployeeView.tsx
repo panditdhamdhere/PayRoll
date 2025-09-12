@@ -3,46 +3,12 @@
 import { useMemo, useState } from 'react';
 import { useAccount, useReadContracts } from 'wagmi';
 import { usePayrollContract } from '@/hooks/usePayrollContract';
-import { CONTRACT_ADDRESSES } from '@/config/contracts';
 import { toast } from 'sonner';
 
 export function EmployeeView() {
   const { address } = useAccount();
-  const { employeeStreams, claimSalary } = usePayrollContract();
+  const { employeeStreams, claimSalary, getStream, getClaimableAmount } = usePayrollContract();
   const [employeeIdInput, setEmployeeIdInput] = useState('');
-
-  const PAYROLL_ABI_MIN = useMemo(
-    () => (
-      [
-        {
-          name: 'streams',
-          type: 'function',
-          stateMutability: 'view',
-          inputs: [{ name: 'streamId', type: 'uint256' }],
-          outputs: [
-            { name: 'totalAmount', type: 'uint256' },
-            { name: 'remainingAmount', type: 'uint256' },
-            { name: 'startTime', type: 'uint256' },
-            { name: 'endTime', type: 'uint256' },
-            { name: 'isActive', type: 'bool' },
-            { name: 'token', type: 'address' },
-            { name: 'employer', type: 'address' },
-          ],
-        },
-        {
-          name: 'getClaimableAmount',
-          type: 'function',
-          stateMutability: 'view',
-          inputs: [
-            { name: 'employeeId', type: 'uint256' },
-            { name: 'streamId', type: 'uint256' },
-          ],
-          outputs: [{ name: 'claimableAmount', type: 'uint256' }],
-        },
-      ] as const
-    ),
-    []
-  );
 
   const streamIds: bigint[] = useMemo(() => {
     if (!employeeStreams) return [];
@@ -53,60 +19,48 @@ export function EmployeeView() {
     }
   }, [employeeStreams]);
 
-  const streamsRead = useReadContracts({
+  // Get stream data for each stream ID using useReadContracts
+  const streamData = useReadContracts({
     allowFailure: true,
-    contracts: streamIds.map((id) => ({
-      address: CONTRACT_ADDRESSES.PAYROLL_STREAM as `0x${string}`,
-      abi: PAYROLL_ABI_MIN,
-      functionName: 'streams',
-      args: [id],
-    })),
-    query: {
-      enabled: streamIds.length > 0,
-    },
+    contracts: streamIds.map(id => getStream(id)),
+    query: { enabled: streamIds.length > 0 },
+  });
+  
+  const claimableData = useReadContracts({
+    allowFailure: true,
+    contracts: employeeIdInput && streamIds.length > 0 
+      ? streamIds.map(id => getClaimableAmount(BigInt(employeeIdInput), id))
+      : [],
+    query: { enabled: !!employeeIdInput && streamIds.length > 0 },
   });
 
-  const claimablesRead = useReadContracts({
-    allowFailure: true,
-    contracts:
-      streamIds.length > 0 && employeeIdInput
-        ? streamIds.map((id) => ({
-            address: CONTRACT_ADDRESSES.PAYROLL_STREAM as `0x${string}`,
-            abi: PAYROLL_ABI_MIN,
-            functionName: 'getClaimableAmount',
-            args: [BigInt(employeeIdInput), id],
-          }))
-        : [],
-    query: {
-      enabled: streamIds.length > 0 && employeeIdInput !== '',
-      refetchInterval: 5000,
-    },
-  });
-
-  const loading = streamsRead.isLoading || (employeeIdInput !== '' && claimablesRead.isLoading);
+  const loading = streamData.isLoading || claimableData.isLoading;
 
   const displayStreams = useMemo(() => {
     return streamIds.map((id, idx) => {
-      const r = streamsRead.data?.[idx];
-      const v = (r && 'result' in (r as any) ? (r as any).result : undefined) as
-        | undefined
-        | [bigint, bigint, bigint, bigint, boolean, `0x${string}`, `0x${string}`];
-      const claimable = employeeIdInput && claimablesRead.data?.[idx]
-        ? ((claimablesRead.data?.[idx] as any).result ?? 0n)
-        : 0n;
+      const streamResult = streamData.data?.[idx];
+      const claimableResult = claimableData.data?.[idx];
+      
+      const stream = streamResult && 'result' in streamResult 
+        ? streamResult.result as [bigint, bigint, bigint, bigint, boolean, `0x${string}`, `0x${string}`]
+        : undefined;
+      const claimable = claimableResult && 'result' in claimableResult 
+        ? claimableResult.result as bigint
+        : BigInt(0);
+      
       return {
         id: Number(id),
-        employer: v ? v[6] : '—',
-        token: v ? v[5] : '—',
+        employer: stream ? stream[6] : '—',
+        token: stream ? stream[5] : '—',
         salaryPerSecond: '—',
         totalEarned: '—',
         claimable,
-        startTime: v ? Number(v[2]) : 0,
-        endTime: v ? Number(v[3]) : 0,
-        isActive: v ? v[4] : false,
+        startTime: stream ? Number(stream[2]) : 0,
+        endTime: stream ? Number(stream[3]) : 0,
+        isActive: stream ? stream[4] : false,
       };
     });
-  }, [streamIds, streamsRead.data, claimablesRead.data, employeeIdInput]);
+  }, [streamIds, streamData.data, claimableData.data]);
 
   return (
     <div className="space-y-6">
@@ -129,8 +83,9 @@ export function EmployeeView() {
                   toast.loading(`Claiming stream #${s.id}...`, { id: `claim-${s.id}` });
                   await claimSalary(BigInt(employeeIdInput), BigInt(s.id));
                   toast.success(`Claimed stream #${s.id}`, { id: `claim-${s.id}` });
-                } catch (err: any) {
-                  toast.error(err?.shortMessage || err?.message || `Failed to claim #${s.id}`, { id: `claim-${s.id}` });
+                } catch (err: unknown) {
+                  const error = err as { shortMessage?: string; message?: string };
+                  toast.error(error?.shortMessage || error?.message || `Failed to claim #${s.id}`, { id: `claim-${s.id}` });
                 }
               }
             }}
@@ -193,8 +148,9 @@ export function EmployeeView() {
                       toast.loading(`Claiming stream #${stream.id}...`, { id: `claim-${stream.id}` });
                       await claimSalary(BigInt(employeeIdInput), BigInt(stream.id));
                       toast.success(`Claimed stream #${stream.id}`, { id: `claim-${stream.id}` });
-                    } catch (err: any) {
-                      toast.error(err?.shortMessage || err?.message || `Failed to claim #${stream.id}`, { id: `claim-${stream.id}` });
+                    } catch (err: unknown) {
+                      const error = err as { shortMessage?: string; message?: string };
+                      toast.error(error?.shortMessage || error?.message || `Failed to claim #${stream.id}`, { id: `claim-${stream.id}` });
                     }
                   }}
                 >
@@ -210,7 +166,7 @@ export function EmployeeView() {
         <div className="text-center py-12">
           <div className="text-6xl mb-4">💼</div>
           <h3 className="text-xl font-semibold mb-2">No Active Streams</h3>
-          <p className="text-black dark:text-gray-600">You don't have any active salary streams yet.</p>
+          <p className="text-black dark:text-gray-600">You don&apos;t have any active salary streams yet.</p>
         </div>
       )}
     </div>

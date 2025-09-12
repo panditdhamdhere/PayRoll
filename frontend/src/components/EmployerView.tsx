@@ -3,95 +3,50 @@
 import { useMemo, useState } from 'react';
 import { useAccount, useReadContracts } from 'wagmi';
 import { usePayrollContract } from '@/hooks/usePayrollContract';
-import { CONTRACT_ADDRESSES } from '@/config/contracts';
 import { toast } from 'sonner';
 
 export function EmployerView() {
   const { address } = useAccount();
-  const { createStream } = usePayrollContract();
+  const { createStream, employerStreams, getStream } = usePayrollContract();
 
   const [employeeId, setEmployeeId] = useState('');
   const [tokenAddress, setTokenAddress] = useState('');
   const [totalAmount, setTotalAmount] = useState('');
 
-  const PAYROLL_ABI_MIN = useMemo(
-    () => (
-      [
-        {
-          name: 'getEmployerStreams',
-          type: 'function',
-          stateMutability: 'view',
-          inputs: [{ name: 'employer', type: 'address' }],
-          outputs: [{ name: 'streamIds', type: 'uint256[]' }],
-        },
-        {
-          name: 'streams',
-          type: 'function',
-          stateMutability: 'view',
-          inputs: [{ name: 'streamId', type: 'uint256' }],
-          outputs: [
-            { name: 'totalAmount', type: 'uint256' },
-            { name: 'remainingAmount', type: 'uint256' },
-            { name: 'startTime', type: 'uint256' },
-            { name: 'endTime', type: 'uint256' },
-            { name: 'isActive', type: 'bool' },
-            { name: 'token', type: 'address' },
-            { name: 'employer', type: 'address' },
-          ],
-        },
-      ] as const
-    ),
-    []
-  );
-
-  const employerStreamsRead = useReadContracts({
-    allowFailure: true,
-    contracts: address
-      ? [
-          {
-            address: CONTRACT_ADDRESSES.PAYROLL_STREAM as `0x${string}`,
-            abi: PAYROLL_ABI_MIN,
-            functionName: 'getEmployerStreams',
-            args: [address],
-          },
-        ]
-      : [],
-    query: { enabled: !!address },
-  });
-
   const streamIds: bigint[] = useMemo(() => {
-    const r = employerStreamsRead.data?.[0] as any;
-    return (r && 'result' in r ? (r.result as bigint[]) : []) || [];
-  }, [employerStreamsRead.data]);
+    if (!employerStreams) return [];
+    try {
+      return employerStreams as unknown as bigint[];
+    } catch {
+      return [];
+    }
+  }, [employerStreams]);
 
-  const streamsRead = useReadContracts({
+  // Get stream data for each stream ID using useReadContracts
+  const streamData = useReadContracts({
     allowFailure: true,
-    contracts: streamIds.map((id) => ({
-      address: CONTRACT_ADDRESSES.PAYROLL_STREAM as `0x${string}`,
-      abi: PAYROLL_ABI_MIN,
-      functionName: 'streams',
-      args: [id],
-    })),
+    contracts: streamIds.map(id => getStream(id)),
     query: { enabled: streamIds.length > 0 },
   });
 
   const displayStreams = useMemo(() => {
     return streamIds.map((id, idx) => {
-      const r = streamsRead.data?.[idx];
-      const v = (r && 'result' in (r as any) ? (r as any).result : undefined) as
-        | undefined
-        | [bigint, bigint, bigint, bigint, boolean, `0x${string}`, `0x${string}`];
+      const streamResult = streamData.data?.[idx];
+      const stream = streamResult && 'result' in streamResult 
+        ? streamResult.result as [bigint, bigint, bigint, bigint, boolean, `0x${string}`, `0x${string}`]
+        : undefined;
+      
       return {
         id: Number(id),
-        token: v ? v[5] : '—',
-        totalAmount: v ? v[0] : 0n,
-        remainingAmount: v ? v[1] : 0n,
-        startTime: v ? Number(v[2]) : 0,
-        endTime: v ? Number(v[3]) : 0,
-        isActive: v ? v[4] : false,
+        token: stream ? stream[5] : '—',
+        totalAmount: stream ? stream[0] : BigInt(0),
+        remainingAmount: stream ? stream[1] : BigInt(0),
+        startTime: stream ? Number(stream[2]) : 0,
+        endTime: stream ? Number(stream[3]) : 0,
+        isActive: stream ? stream[4] : false,
       };
     });
-  }, [streamIds, streamsRead.data]);
+  }, [streamIds, streamData.data]);
 
   return (
     <div className="space-y-6">
@@ -140,10 +95,11 @@ export function EmployerView() {
             onClick={async () => {
               try {
                 toast.loading('Creating stream...', { id: 'create-stream' });
-                await createStream([BigInt(employeeId), tokenAddress as `0x${string}`, BigInt(totalAmount)]);
+                await createStream(BigInt(employeeId), tokenAddress as `0x${string}`, BigInt(totalAmount));
                 toast.success('Stream created', { id: 'create-stream' });
-              } catch (err: any) {
-                toast.error(err?.shortMessage || err?.message || 'Failed to create stream', { id: 'create-stream' });
+              } catch (err: unknown) {
+                const error = err as { shortMessage?: string; message?: string };
+                toast.error(error?.shortMessage || error?.message || 'Failed to create stream', { id: 'create-stream' });
               }
             }}
           >

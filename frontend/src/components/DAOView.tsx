@@ -3,32 +3,13 @@
 import { useMemo, useState } from 'react';
 import { useAccount, useReadContracts } from 'wagmi';
 import { useDAOContract } from '@/hooks/useDAOContract';
-import { CONTRACT_ADDRESSES } from '@/config/contracts';
 import { toast } from 'sonner';
 
 export function DAOView() {
   const { address } = useAccount();
-  const { employeeAllocations, claimTokens, createTokenAllocation, allocateToEmployee } = useDAOContract();
+  const { employeeAllocations, claimTokens, createTokenAllocation, allocateToEmployee, getClaimableAmount } = useDAOContract();
 
   const [allocationIdInput, setAllocationIdInput] = useState('');
-
-  const DAO_ABI_MIN = useMemo(
-    () => (
-      [
-        {
-          name: 'getClaimableAmount',
-          type: 'function',
-          stateMutability: 'view',
-          inputs: [
-            { name: 'employee', type: 'address' },
-            { name: 'allocationId', type: 'uint256' },
-          ],
-          outputs: [{ name: 'claimableAmount', type: 'uint256' }],
-        },
-      ] as const
-    ),
-    []
-  );
 
   const allocationIds: bigint[] = useMemo(() => {
     if (!employeeAllocations) return [];
@@ -39,26 +20,28 @@ export function DAOView() {
     }
   }, [employeeAllocations]);
 
-  const claimablesRead = useReadContracts({
+  // Get claimable amounts for each allocation using useReadContracts
+  const claimableData = useReadContracts({
     allowFailure: true,
-    contracts:
-      address && allocationIds.length > 0
-        ? allocationIds.map((id) => ({
-            address: CONTRACT_ADDRESSES.DAO_DISTRIBUTION as `0x${string}`,
-            abi: DAO_ABI_MIN,
-            functionName: 'getClaimableAmount',
-            args: [address, id],
-          }))
-        : [],
-    query: { enabled: !!address && allocationIds.length > 0, refetchInterval: 10000 },
+    contracts: address && allocationIds.length > 0 
+      ? allocationIds.map(id => getClaimableAmount(address, id))
+      : [],
+    query: { enabled: !!address && allocationIds.length > 0 },
   });
 
   const displayAllocations = useMemo(() => {
-    return allocationIds.map((id, idx) => ({
-      id: Number(id),
-      claimable: (claimablesRead.data?.[idx] as any)?.result ?? 0n,
-    }));
-  }, [allocationIds, claimablesRead.data]);
+    return allocationIds.map((id, idx) => {
+      const claimableResult = claimableData.data?.[idx];
+      const claimable = claimableResult && 'result' in claimableResult 
+        ? claimableResult.result as bigint
+        : BigInt(0);
+      
+      return {
+        id: Number(id),
+        claimable,
+      };
+    });
+  }, [allocationIds, claimableData.data]);
 
   return (
     <div className="space-y-6">
@@ -75,8 +58,8 @@ export function DAOView() {
                 <div>
                   <h4 className="text-lg font-semibold">Allocation #{allocation.id}</h4>
                 </div>
-                <span className={`px-3 py-1 rounded-full text-sm font-medium ${allocation.claimable > 0n ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
-                  {allocation.claimable > 0n ? 'Claimable' : 'Vesting'}
+                <span className={`px-3 py-1 rounded-full text-sm font-medium ${allocation.claimable > BigInt(0) ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                  {allocation.claimable > BigInt(0) ? 'Claimable' : 'Vesting'}
                 </span>
               </div>
 
@@ -92,15 +75,16 @@ export function DAOView() {
                   <p>Holder: {address}</p>
                 </div>
                 <button
-                  disabled={allocation.claimable === 0n}
-                  className={`px-4 py-2 rounded-lg transition-colors ${allocation.claimable > 0n ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg font-medium' : 'bg-gray-300 text-gray-500 cursor-not-allowed'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-white/60 dark:focus:ring-offset-black/40`}
+                  disabled={allocation.claimable === BigInt(0)}
+                  className={`px-4 py-2 rounded-lg transition-colors ${allocation.claimable > BigInt(0) ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg font-medium' : 'bg-gray-300 text-gray-500 cursor-not-allowed'} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-white/60 dark:focus:ring-offset-black/40`}
                   onClick={async () => {
                     try {
                       toast.loading(`Claiming allocation #${allocation.id}...`, { id: `dao-claim-${allocation.id}` });
                       await claimTokens(BigInt(allocation.id));
                       toast.success(`Claimed allocation #${allocation.id}`, { id: `dao-claim-${allocation.id}` });
-                    } catch (err: any) {
-                      toast.error(err?.shortMessage || err?.message || `Failed to claim #${allocation.id}`, { id: `dao-claim-${allocation.id}` });
+                    } catch (err: unknown) {
+                      const error = err as { shortMessage?: string; message?: string };
+                      toast.error(error?.shortMessage || error?.message || `Failed to claim #${allocation.id}`, { id: `dao-claim-${allocation.id}` });
                     }
                   }}
                 >
@@ -129,8 +113,9 @@ export function DAOView() {
                 toast.loading(`Claiming allocation #${allocationIdInput}...`, { id: 'dao-claim-input' });
                 await claimTokens(BigInt(allocationIdInput));
                 toast.success(`Claimed allocation #${allocationIdInput}`, { id: 'dao-claim-input' });
-              } catch (err: any) {
-                toast.error(err?.shortMessage || err?.message || 'Claim failed', { id: 'dao-claim-input' });
+              } catch (err: unknown) {
+                const error = err as { shortMessage?: string; message?: string };
+                toast.error(error?.shortMessage || error?.message || 'Claim failed', { id: 'dao-claim-input' });
               }
             }}
           >

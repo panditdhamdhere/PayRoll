@@ -1,56 +1,29 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useAccount, useReadContract } from 'wagmi';
 import { useYieldContract } from '@/hooks/useYieldContract';
-import { CONTRACT_ADDRESSES } from '@/config/contracts';
+import { SUPPORTED_TOKENS } from '@/config/contracts';
 import { toast } from 'sonner';
 
 export function YieldView() {
   const { address } = useAccount();
-  const { deposit, withdraw } = useYieldContract();
+  const { deposit, withdraw, getTotalYield, getAvailableBalance } = useYieldContract();
 
-  const [token, setToken] = useState('');
+  const [token, setToken] = useState(SUPPORTED_TOKENS.USDC.address);
   const [amount, setAmount] = useState('');
   const [protocol, setProtocol] = useState('Aave');
   const [apy, setApy] = useState('850'); // 8.50% in basis points demo
 
-  const YIELD_ABI_MIN = useMemo(
-    () => (
-      [
-        {
-          name: 'getTotalYield',
-          type: 'function',
-          stateMutability: 'view',
-          inputs: [{ name: 'token', type: 'address' }],
-          outputs: [{ name: 'totalYieldAmount', type: 'uint256' }],
-        },
-        {
-          name: 'getAvailableBalance',
-          type: 'function',
-          stateMutability: 'view',
-          inputs: [{ name: 'token', type: 'address' }],
-          outputs: [{ name: 'availableBalance', type: 'uint256' }],
-        },
-      ] as const
-    ),
-    []
-  );
-
+  // Use useReadContract with hook configurations
   const totalYield = useReadContract({
-    address: CONTRACT_ADDRESSES.YIELD_STRATEGY as `0x${string}`,
-    abi: YIELD_ABI_MIN,
-    functionName: 'getTotalYield',
-    args: token ? [token as `0x${string}`] : undefined,
-    query: { enabled: !!token, refetchInterval: 5000 },
+    ...getTotalYield(token as `0x${string}`),
+    query: { enabled: !!token },
   });
-
+  
   const availableBalance = useReadContract({
-    address: CONTRACT_ADDRESSES.YIELD_STRATEGY as `0x${string}`,
-    abi: YIELD_ABI_MIN,
-    functionName: 'getAvailableBalance',
-    args: token ? [token as `0x${string}`] : undefined,
-    query: { enabled: !!token, refetchInterval: 5000 },
+    ...getAvailableBalance(token as `0x${string}`),
+    query: { enabled: !!token },
   });
 
   return (
@@ -99,8 +72,9 @@ export function YieldView() {
                 toast.loading('Depositing...', { id: 'deposit' });
                 await deposit(token as `0x${string}`, BigInt(amount), protocol, BigInt(apy || '0'));
                 toast.success('Deposit submitted', { id: 'deposit' });
-              } catch (err: any) {
-                toast.error(err?.shortMessage || err?.message || 'Deposit failed', { id: 'deposit' });
+              } catch (err: unknown) {
+                const error = err as { shortMessage?: string; message?: string };
+                toast.error(error?.shortMessage || error?.message || 'Deposit failed', { id: 'deposit' });
               }
             }}
           >
@@ -114,8 +88,9 @@ export function YieldView() {
                 toast.loading('Withdrawing...', { id: 'withdraw' });
                 await withdraw(token as `0x${string}`, BigInt(amount));
                 toast.success('Withdraw submitted', { id: 'withdraw' });
-              } catch (err: any) {
-                toast.error(err?.shortMessage || err?.message || 'Withdraw failed', { id: 'withdraw' });
+              } catch (err: unknown) {
+                const error = err as { shortMessage?: string; message?: string };
+                toast.error(error?.shortMessage || error?.message || 'Withdraw failed', { id: 'withdraw' });
               }
             }}
           >
@@ -128,13 +103,13 @@ export function YieldView() {
         <div className="rounded-lg p-6 border border-gray-200/50 dark:border-gray-700/50 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl shadow-lg">
           <p className="text-sm text-green-700 dark:text-green-400 font-medium">Available Balance</p>
           <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
-            {token ? (availableBalance.data ? (Number(availableBalance.data as any) / 1e18).toFixed(6) : '—') : '—'}
+            {token ? (availableBalance.data ? (Number(availableBalance.data as bigint) / 1e18).toFixed(6) : '—') : '—'}
           </p>
         </div>
         <div className="rounded-lg p-6 border border-gray-200/50 dark:border-gray-700/50 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl shadow-lg">
           <p className="text-sm text-blue-700 dark:text-blue-400 font-medium">Total Yield Generated</p>
           <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
-            {token ? (totalYield.data ? (Number(totalYield.data as any) / 1e18).toFixed(6) : '—') : '—'}
+            {token ? (totalYield.data ? (Number(totalYield.data as bigint) / 1e18).toFixed(6) : '—') : '—'}
           </p>
         </div>
       </div>

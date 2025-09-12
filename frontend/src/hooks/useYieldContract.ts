@@ -1,9 +1,9 @@
 'use client';
 
-import { useReadContract, useWriteContract } from 'wagmi';
+import { useWriteContract } from 'wagmi';
 import { CONTRACT_ADDRESSES } from '@/config/contracts';
 
-// ABI for YieldStrategy contract (simplified for frontend)
+// ABI for YieldStrategy contract (complete for frontend)
 const YIELD_ABI = [
   {
     "inputs": [
@@ -50,11 +50,82 @@ const YIELD_ABI = [
     "outputs": [{"internalType": "uint256", "name": "availableBalance", "type": "uint256"}],
     "stateMutability": "view",
     "type": "function"
+  },
+  {
+    "inputs": [{"internalType": "address", "name": "token", "type": "address"}],
+    "name": "totalDeposits",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{"internalType": "address", "name": "token", "type": "address"}],
+    "name": "totalWithdrawals",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{"internalType": "address", "name": "token", "type": "address"}],
+    "name": "totalYield",
+    "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{"internalType": "address", "name": "token", "type": "address"}],
+    "name": "supportedTokens",
+    "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
+    "stateMutability": "view",
+    "type": "function"
   }
 ] as const;
 
 export function useYieldContract() {
   const { writeContract } = useWriteContract();
+
+  // Helper functions that return hook configurations
+  const getTotalDeposits = (token: `0x${string}`) => ({
+    address: CONTRACT_ADDRESSES.YIELD_STRATEGY as `0x${string}`,
+    abi: YIELD_ABI,
+    functionName: 'totalDeposits' as const,
+    args: [token] as const,
+  });
+
+  const getTotalWithdrawals = (token: `0x${string}`) => ({
+    address: CONTRACT_ADDRESSES.YIELD_STRATEGY as `0x${string}`,
+    abi: YIELD_ABI,
+    functionName: 'totalWithdrawals' as const,
+    args: [token] as const,
+  });
+
+  const getTotalYield = (token: `0x${string}`) => ({
+    address: CONTRACT_ADDRESSES.YIELD_STRATEGY as `0x${string}`,
+    abi: YIELD_ABI,
+    functionName: 'totalYield' as const,
+    args: [token] as const,
+  });
+
+  const getAvailableBalance = (token: `0x${string}`) => ({
+    address: CONTRACT_ADDRESSES.YIELD_STRATEGY as `0x${string}`,
+    abi: YIELD_ABI,
+    functionName: 'getAvailableBalance' as const,
+    args: [token] as const,
+  });
+
+  const getCurrentYieldRate = (token: `0x${string}`) => ({
+    address: CONTRACT_ADDRESSES.YIELD_STRATEGY as `0x${string}`,
+    abi: YIELD_ABI,
+    functionName: 'getCurrentYieldRate' as const,
+    args: [token] as const,
+  });
+
+  const isTokenSupported = (token: `0x${string}`) => ({
+    address: CONTRACT_ADDRESSES.YIELD_STRATEGY as `0x${string}`,
+    abi: YIELD_ABI,
+    functionName: 'supportedTokens' as const,
+    args: [token] as const,
+  });
 
   const deposit = (token: `0x${string}`, amount: bigint, protocol: string, apy: bigint) => {
     writeContract({
@@ -75,6 +146,15 @@ export function useYieldContract() {
   };
 
   return {
+    // Helper functions
+    getTotalDeposits,
+    getTotalWithdrawals,
+    getTotalYield,
+    getAvailableBalance,
+    getCurrentYieldRate,
+    isTokenSupported,
+    
+    // Write functions
     deposit,
     withdraw,
   };
