@@ -7,11 +7,20 @@ import { toast } from 'sonner';
 
 export function EmployerView() {
   const { address } = useAccount();
-  const { createStream, employerStreams, getStream } = usePayrollContract();
+  const { createStream, employerStreams, getStream, addEmployee } = usePayrollContract();
 
+  // Stream creation state
   const [employeeId, setEmployeeId] = useState('');
   const [tokenAddress, setTokenAddress] = useState('');
   const [totalAmount, setTotalAmount] = useState('');
+
+  // Add employee state
+  const [employeeRecipient, setEmployeeRecipient] = useState('');
+  const [salaryPerSecond, setSalaryPerSecond] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const [taxRate, setTaxRate] = useState('');
+  const [taxRecipient, setTaxRecipient] = useState('');
 
   const streamIds: bigint[] = useMemo(() => {
     if (!employerStreams) return [];
@@ -54,6 +63,126 @@ export function EmployerView() {
         <h2 className="text-2xl font-semibold">Employee Management</h2>
       </div>
 
+      {/* Add Employee Section */}
+      <div className="rounded-xl p-6 border border-gray-200/50 dark:border-gray-700/50 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl shadow-lg">
+        <h3 className="text-lg font-semibold mb-4">Add New Employee</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-black dark:text-gray-700 mb-2">Employee Address</label>
+            <input
+              value={employeeRecipient}
+              onChange={(e) => setEmployeeRecipient(e.target.value)}
+              type="text"
+              className="w-full px-3 py-2 rounded-lg border border-gray-300/50 dark:border-gray-600/50 bg-white/90 dark:bg-gray-800/90 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+              placeholder="0x..."
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-black dark:text-gray-700 mb-2">Salary Per Second (wei)</label>
+            <input
+              value={salaryPerSecond}
+              onChange={(e) => setSalaryPerSecond(e.target.value.replace(/\D/g, ''))}
+              type="text"
+              className="w-full px-3 py-2 rounded-lg border border-gray-300/50 dark:border-gray-600/50 bg-white/90 dark:bg-gray-800/90 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+              placeholder="1000000000000000"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-black dark:text-gray-700 mb-2">Start Time (Unix timestamp)</label>
+            <input
+              value={startTime}
+              onChange={(e) => setStartTime(e.target.value.replace(/\D/g, ''))}
+              type="text"
+              className="w-full px-3 py-2 rounded-lg border border-gray-300/50 dark:border-gray-600/50 bg-white/90 dark:bg-gray-800/90 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+              placeholder="1735689600"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-black dark:text-gray-700 mb-2">End Time (Unix timestamp)</label>
+            <input
+              value={endTime}
+              onChange={(e) => setEndTime(e.target.value.replace(/\D/g, ''))}
+              type="text"
+              className="w-full px-3 py-2 rounded-lg border border-gray-300/50 dark:border-gray-600/50 bg-white/90 dark:bg-gray-800/90 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+              placeholder="1767225600"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-black dark:text-gray-700 mb-2">Tax Rate (basis points)</label>
+            <input
+              value={taxRate}
+              onChange={(e) => setTaxRate(e.target.value.replace(/\D/g, ''))}
+              type="text"
+              className="w-full px-3 py-2 rounded-lg border border-gray-300/50 dark:border-gray-600/50 bg-white/90 dark:bg-gray-800/90 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+              placeholder="2500 (25%)"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-black dark:text-gray-700 mb-2">Tax Recipient Address</label>
+            <input
+              value={taxRecipient}
+              onChange={(e) => setTaxRecipient(e.target.value)}
+              type="text"
+              className="w-full px-3 py-2 rounded-lg border border-gray-300/50 dark:border-gray-600/50 bg-white/90 dark:bg-gray-800/90 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+              placeholder="0x..."
+            />
+          </div>
+        </div>
+        <div className="mt-4 flex gap-3 flex-wrap">
+          <button
+            className="px-4 py-2 rounded-lg bg-gray-600 text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:ring-offset-white/60 dark:focus:ring-offset-black/40 shadow-lg font-medium text-sm"
+            onClick={() => {
+              const now = Math.floor(Date.now() / 1000);
+              const oneYearLater = now + (365 * 24 * 60 * 60);
+              setStartTime(now.toString());
+              setEndTime(oneYearLater.toString());
+            }}
+          >
+            Set Current Time
+          </button>
+          <button
+            className="px-4 py-2 rounded-lg bg-gray-600 text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:ring-offset-white/60 dark:focus:ring-offset-black/40 shadow-lg font-medium text-sm"
+            onClick={() => {
+              setTaxRate('2500'); // 25%
+              setTaxRecipient(address || '');
+            }}
+          >
+            Set Default Tax (25%)
+          </button>
+          <button
+            className="px-6 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 focus:ring-offset-white/60 dark:focus:ring-offset-black/40 shadow-lg font-medium"
+            disabled={!employeeRecipient || !salaryPerSecond || !startTime || !endTime || !taxRate || !taxRecipient}
+            onClick={async () => {
+              try {
+                toast.loading('Adding employee...', { id: 'add-employee' });
+                await addEmployee(
+                  employeeRecipient as `0x${string}`,
+                  BigInt(salaryPerSecond),
+                  BigInt(startTime),
+                  BigInt(endTime),
+                  BigInt(taxRate),
+                  taxRecipient as `0x${string}`
+                );
+                toast.success('Employee added successfully!', { id: 'add-employee' });
+                // Reset form
+                setEmployeeRecipient('');
+                setSalaryPerSecond('');
+                setStartTime('');
+                setEndTime('');
+                setTaxRate('');
+                setTaxRecipient('');
+              } catch (err: unknown) {
+                const error = err as { shortMessage?: string; message?: string };
+                toast.error(error?.shortMessage || error?.message || 'Failed to add employee', { id: 'add-employee' });
+              }
+            }}
+          >
+            Add Employee
+          </button>
+        </div>
+      </div>
+
+      {/* Create Stream Section */}
       <div className="rounded-xl p-6 border border-gray-200/50 dark:border-gray-700/50 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl shadow-lg">
         <h3 className="text-lg font-semibold mb-4">Create New Salary Stream</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -88,7 +217,23 @@ export function EmployerView() {
             />
           </div>
         </div>
-        <div className="mt-4 flex gap-3">
+        <div className="mt-4 flex gap-3 flex-wrap">
+          <button
+            className="px-4 py-2 rounded-lg bg-gray-600 text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:ring-offset-white/60 dark:focus:ring-offset-black/40 shadow-lg font-medium text-sm"
+            onClick={() => {
+              setTokenAddress('0x036CbD53842c5426634e7929541eC2318f3dCF7e'); // USDC on Base Sepolia
+            }}
+          >
+            Use USDC
+          </button>
+          <button
+            className="px-4 py-2 rounded-lg bg-gray-600 text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:ring-offset-white/60 dark:focus:ring-offset-black/40 shadow-lg font-medium text-sm"
+            onClick={() => {
+              setTotalAmount('1000000000000000000'); // 1 token in wei
+            }}
+          >
+            Set 1 Token
+          </button>
           <button
             className="px-6 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-white/60 dark:focus:ring-offset-black/40 shadow-lg font-medium"
             disabled={!employeeId || !tokenAddress || !totalAmount}
@@ -97,6 +242,10 @@ export function EmployerView() {
                 toast.loading('Creating stream...', { id: 'create-stream' });
                 await createStream(BigInt(employeeId), tokenAddress as `0x${string}`, BigInt(totalAmount));
                 toast.success('Stream created', { id: 'create-stream' });
+                // Reset form
+                setEmployeeId('');
+                setTokenAddress('');
+                setTotalAmount('');
               } catch (err: unknown) {
                 const error = err as { shortMessage?: string; message?: string };
                 toast.error(error?.shortMessage || error?.message || 'Failed to create stream', { id: 'create-stream' });
