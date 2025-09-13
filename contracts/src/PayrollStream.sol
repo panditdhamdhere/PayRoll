@@ -148,6 +148,46 @@ contract PayrollStream is ReentrancyGuard, Ownable, Pausable {
     }
     
     /**
+     * @dev Add a new employee to the payroll system (public version)
+     * @param recipient Employee's wallet address
+     * @param salaryPerSecond Salary amount per second (in wei)
+     * @param startTime When the salary stream should start
+     * @param endTime When the salary stream should end
+     * @param taxRate Tax rate in basis points (e.g., 2500 = 25%)
+     * @param taxRecipient Address to receive tax payments
+     * @return employeeId The assigned employee ID
+     */
+    function addEmployeePublic(
+        address recipient,
+        uint256 salaryPerSecond,
+        uint256 startTime,
+        uint256 endTime,
+        uint256 taxRate,
+        address taxRecipient
+    ) external returns (uint256 employeeId) {
+        require(recipient != address(0), "Invalid recipient");
+        require(salaryPerSecond > 0, "Salary must be positive");
+        require(startTime < endTime, "Invalid time range");
+        require(taxRate <= 10000, "Tax rate too high");
+        require(taxRecipient != address(0), "Invalid tax recipient");
+        
+        employeeId = nextEmployeeId++;
+        
+        employees[employeeId] = Employee({
+            recipient: recipient,
+            salaryPerSecond: salaryPerSecond,
+            startTime: startTime,
+            endTime: endTime,
+            lastClaimed: startTime,
+            isActive: true,
+            taxRate: taxRate,
+            taxRecipient: taxRecipient
+        });
+        
+        emit EmployeeAdded(employeeId, recipient, salaryPerSecond, startTime, endTime, taxRate);
+    }
+    
+    /**
      * @dev Deactivate an employee
      * @param employeeId ID of the employee to deactivate
      */

@@ -1,0 +1,43 @@
+No files changed, compilation skipped
+Script ran successfully.
+
+== Logs ==
+  Deploying contracts with account: 0x339abb297eB21A0ee52E22e07DDe496c0fe98fB9
+  Account balance: 998668141110479416
+  YieldStrategy deployed at: 0x0ec36CA98966A531F9C5cA973Ebf4d998060ab97
+  DAOTokenDistribution deployed at: 0xd480E98366514901c7ab9e3501B63DfCb19dBFA9
+  PayrollStream deployed at: 0xDe3bC91a9e47993B2c9209B6Dfc5A1C14Ce26dBb
+  YieldStrategy payroll contract set
+  DAO distribution authorized payroll contract
+  PayrollStream yield strategy set
+  
+=== DEPLOYMENT SUMMARY ===
+  PayrollStream: 0xDe3bC91a9e47993B2c9209B6Dfc5A1C14Ce26dBb
+  YieldStrategy: 0x0ec36CA98966A531F9C5cA973Ebf4d998060ab97
+  DAOTokenDistribution: 0xd480E98366514901c7ab9e3501B63DfCb19dBFA9
+  Fee Recipient: 0x339abb297eB21A0ee52E22e07DDe496c0fe98fB9
+  Deployer: 0x339abb297eB21A0ee52E22e07DDe496c0fe98fB9
+
+## Setting up 1 EVM.
+
+==========================
+
+Chain 84532
+
+Estimated gas price: 0.001000196 gwei
+
+Estimated total gas used for script: 11046424
+
+Estimated amount required: 0.000011048589099104 ETH
+
+==========================
+
+
+==========================
+
+ONCHAIN EXECUTION COMPLETE & SUCCESSFUL.
+
+Transactions saved to: /Users/panditdhamdhere/Desktop/payroll/contracts/broadcast/Deploy.s.sol/84532/run-latest.json
+
+Sensitive values saved to: /Users/panditdhamdhere/Desktop/payroll/contracts/cache/Deploy.s.sol/84532/run-latest.json
+

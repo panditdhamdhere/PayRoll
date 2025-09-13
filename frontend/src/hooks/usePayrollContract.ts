@@ -146,16 +146,16 @@ export function usePayrollContract() {
 
   // Write functions
   const addEmployee = (recipient: `0x${string}`, salaryPerSecond: bigint, startTime: bigint, endTime: bigint, taxRate: bigint, taxRecipient: `0x${string}`) => {
-    writeContract({
+    return writeContract({
       address: CONTRACT_ADDRESSES.PAYROLL_STREAM as `0x${string}`,
       abi: PAYROLL_ABI,
-      functionName: 'addEmployee',
+      functionName: 'addEmployeePublic',
       args: [recipient, salaryPerSecond, startTime, endTime, taxRate, taxRecipient],
     });
   };
 
   const createStream = (employeeId: bigint, token: `0x${string}`, totalAmount: bigint) => {
-    writeContract({
+    return writeContract({
       address: CONTRACT_ADDRESSES.PAYROLL_STREAM as `0x${string}`,
       abi: PAYROLL_ABI,
       functionName: 'createStream',
@@ -164,7 +164,7 @@ export function usePayrollContract() {
   };
 
   const claimSalary = (employeeId: bigint, streamId: bigint) => {
-    writeContract({
+    return writeContract({
       address: CONTRACT_ADDRESSES.PAYROLL_STREAM as `0x${string}`,
       abi: PAYROLL_ABI,
       functionName: 'claimSalary',
