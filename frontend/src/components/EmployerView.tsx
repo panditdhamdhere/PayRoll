@@ -45,6 +45,16 @@ export function EmployerView() {
         ? streamResult.result as [bigint, bigint, bigint, bigint, boolean, `0x${string}`, `0x${string}`]
         : undefined;
       
+      // Debug logging
+      if (typeof window !== 'undefined') {
+        console.log(`EmployerView - Stream ${id}:`, {
+          streamResult,
+          stream,
+          totalAmount: stream ? stream[0] : 'undefined',
+          remainingAmount: stream ? stream[1] : 'undefined'
+        });
+      }
+      
       return {
         id: Number(id),
         token: stream ? stream[5] : '—',
@@ -299,11 +309,11 @@ export function EmployerView() {
               <div className="mt-2 space-y-1 text-sm">
                 <div className="flex justify-between">
                   <span className="text-black dark:text-gray-600">Total Amount:</span>
-                  <span className="font-medium">{typeof stream.totalAmount === 'bigint' ? (Number(stream.totalAmount) / 1e18).toFixed(6) : stream.totalAmount} </span>
+                  <span className="font-medium">{typeof stream.totalAmount === 'bigint' ? (Number(stream.totalAmount) / 1e6).toFixed(6) : stream.totalAmount} USDC</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-black dark:text-gray-600">Remaining:</span>
-                  <span className="font-medium">{typeof stream.remainingAmount === 'bigint' ? (Number(stream.remainingAmount) / 1e18).toFixed(6) : stream.remainingAmount}</span>
+                  <span className="font-medium">{typeof stream.remainingAmount === 'bigint' ? (Number(stream.remainingAmount) / 1e6).toFixed(6) : stream.remainingAmount} USDC</span>
                 </div>
               </div>
             </div>
