@@ -21,6 +21,20 @@ const PAYROLL_ABI = [
   },
   {
     "inputs": [
+      {"internalType": "address", "name": "recipient", "type": "address"},
+      {"internalType": "uint256", "name": "salaryPerSecond", "type": "uint256"},
+      {"internalType": "uint256", "name": "startTime", "type": "uint256"},
+      {"internalType": "uint256", "name": "endTime", "type": "uint256"},
+      {"internalType": "uint256", "name": "taxRate", "type": "uint256"},
+      {"internalType": "address", "name": "taxRecipient", "type": "address"}
+    ],
+    "name": "addEmployeePublic",
+    "outputs": [{"internalType": "uint256", "name": "employeeId", "type": "uint256"}],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
       {"internalType": "uint256", "name": "employeeId", "type": "uint256"},
       {"internalType": "address", "name": "token", "type": "address"},
       {"internalType": "uint256", "name": "totalAmount", "type": "uint256"}
