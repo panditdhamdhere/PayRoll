@@ -235,6 +235,43 @@ contract PayrollStream is ReentrancyGuard, Ownable, Pausable {
     }
     
     /**
+     * @dev Create a salary stream for an employee (employer version)
+     * @param employeeId ID of the employee
+     * @param token Token address to stream
+     * @param totalAmount Total amount to stream
+     * @return streamId The created stream ID
+     */
+    function createStreamForEmployee(
+        uint256 employeeId,
+        address token,
+        uint256 totalAmount
+    ) external onlyActiveEmployee(employeeId) returns (uint256 streamId) {
+        Employee memory employee = employees[employeeId];
+        require(block.timestamp >= employee.startTime, "Stream not started");
+        require(block.timestamp < employee.endTime, "Stream ended");
+        require(totalAmount > 0, "Amount must be positive");
+        
+        IERC20(token).safeTransferFrom(msg.sender, address(this), totalAmount);
+        
+        streamId = nextStreamId++;
+        
+        streams[streamId] = Stream({
+            totalAmount: totalAmount,
+            remainingAmount: totalAmount,
+            startTime: employee.startTime,
+            endTime: employee.endTime,
+            isActive: true,
+            token: token,
+            employer: msg.sender
+        });
+        
+        employeeStreams[employee.recipient].push(streamId);
+        employerStreams[msg.sender].push(streamId);
+        
+        emit StreamCreated(streamId, msg.sender, token, totalAmount, employee.startTime, employee.endTime);
+    }
+    
+    /**
      * @dev Cancel an active stream
      * @param streamId ID of the stream to cancel
      */

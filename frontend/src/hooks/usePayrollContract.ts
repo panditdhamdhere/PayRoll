@@ -47,6 +47,17 @@ const PAYROLL_ABI = [
   {
     "inputs": [
       {"internalType": "uint256", "name": "employeeId", "type": "uint256"},
+      {"internalType": "address", "name": "token", "type": "address"},
+      {"internalType": "uint256", "name": "totalAmount", "type": "uint256"}
+    ],
+    "name": "createStreamForEmployee",
+    "outputs": [{"internalType": "uint256", "name": "streamId", "type": "uint256"}],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {"internalType": "uint256", "name": "employeeId", "type": "uint256"},
       {"internalType": "uint256", "name": "streamId", "type": "uint256"}
     ],
     "name": "claimSalary",
@@ -172,7 +183,7 @@ export function usePayrollContract() {
     return writeContract({
       address: CONTRACT_ADDRESSES.PAYROLL_STREAM as `0x${string}`,
       abi: PAYROLL_ABI,
-      functionName: 'createStream',
+      functionName: 'createStreamForEmployee',
       args: [employeeId, token, totalAmount],
     });
   };
@@ -183,6 +194,27 @@ export function usePayrollContract() {
       abi: PAYROLL_ABI,
       functionName: 'claimSalary',
       args: [employeeId, streamId],
+    });
+  };
+
+  // Token approval function
+  const approveToken = (tokenAddress: `0x${string}`, amount: bigint) => {
+    return writeContract({
+      address: tokenAddress,
+      abi: [
+        {
+          "inputs": [
+            {"internalType": "address", "name": "spender", "type": "address"},
+            {"internalType": "uint256", "name": "amount", "type": "uint256"}
+          ],
+          "name": "approve",
+          "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }
+      ],
+      functionName: 'approve',
+      args: [CONTRACT_ADDRESSES.PAYROLL_STREAM as `0x${string}`, amount],
     });
   };
 
@@ -200,5 +232,6 @@ export function usePayrollContract() {
     addEmployee,
     createStream,
     claimSalary,
+    approveToken,
   };
 }

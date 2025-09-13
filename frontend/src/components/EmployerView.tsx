@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 
 export function EmployerView() {
   const { address } = useAccount();
-  const { createStream, employerStreams, getStream, addEmployee } = usePayrollContract();
+  const { createStream, employerStreams, getStream, addEmployee, approveToken } = usePayrollContract();
 
   // Stream creation state
   const [employeeId, setEmployeeId] = useState('');
@@ -236,6 +236,25 @@ export function EmployerView() {
             }}
           >
             Set 1 Token
+          </button>
+          <button
+            className="px-4 py-2 rounded-lg bg-yellow-600 text-white hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 focus:ring-offset-white/60 dark:focus:ring-offset-black/40 shadow-lg font-medium text-sm"
+            disabled={!tokenAddress || !totalAmount}
+            onClick={async () => {
+              try {
+                toast.loading('Approving token...', { id: 'approve-token' });
+                console.log('Approving token:', { tokenAddress, totalAmount });
+                await approveToken(tokenAddress as `0x${string}`, BigInt(totalAmount));
+                toast.success('Token approved successfully!', { id: 'approve-token' });
+              } catch (err: unknown) {
+                console.error('Approve token error:', err);
+                const error = err as { shortMessage?: string; message?: string; details?: string };
+                const errorMessage = error?.shortMessage || error?.message || error?.details || 'Failed to approve token';
+                toast.error(`Approve token failed: ${errorMessage}`, { id: 'approve-token' });
+              }
+            }}
+          >
+            Approve Token
           </button>
           <button
             className="px-6 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-white/60 dark:focus:ring-offset-black/40 shadow-lg font-medium"

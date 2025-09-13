@@ -3,18 +3,18 @@ Script ran successfully.
 
 == Logs ==
   Deploying contracts with account: 0x339abb297eB21A0ee52E22e07DDe496c0fe98fB9
-  Account balance: 998668141110479416
-  YieldStrategy deployed at: 0x0ec36CA98966A531F9C5cA973Ebf4d998060ab97
-  DAOTokenDistribution deployed at: 0xd480E98366514901c7ab9e3501B63DfCb19dBFA9
-  PayrollStream deployed at: 0xDe3bC91a9e47993B2c9209B6Dfc5A1C14Ce26dBb
+  Account balance: 998650216647429523
+  YieldStrategy deployed at: 0xFE90Cc1DaEc4eeA37Cf6a06E3E42601903Ccd28A
+  DAOTokenDistribution deployed at: 0x28824871Ce97592e48B4E56450B6900e7056759b
+  PayrollStream deployed at: 0xDd79eEf48115Bc237A4Fe3EABFcC4e1b6b199Ed0
   YieldStrategy payroll contract set
   DAO distribution authorized payroll contract
   PayrollStream yield strategy set
   
 === DEPLOYMENT SUMMARY ===
-  PayrollStream: 0xDe3bC91a9e47993B2c9209B6Dfc5A1C14Ce26dBb
-  YieldStrategy: 0x0ec36CA98966A531F9C5cA973Ebf4d998060ab97
-  DAOTokenDistribution: 0xd480E98366514901c7ab9e3501B63DfCb19dBFA9
+  PayrollStream: 0xDd79eEf48115Bc237A4Fe3EABFcC4e1b6b199Ed0
+  YieldStrategy: 0xFE90Cc1DaEc4eeA37Cf6a06E3E42601903Ccd28A
+  DAOTokenDistribution: 0x28824871Ce97592e48B4E56450B6900e7056759b
   Fee Recipient: 0x339abb297eB21A0ee52E22e07DDe496c0fe98fB9
   Deployer: 0x339abb297eB21A0ee52E22e07DDe496c0fe98fB9
 
@@ -24,11 +24,11 @@ Script ran successfully.
 
 Chain 84532
 
-Estimated gas price: 0.001000196 gwei
+Estimated gas price: 0.001000162 gwei
 
-Estimated total gas used for script: 11046424
+Estimated total gas used for script: 11428717
 
-Estimated amount required: 0.000011048589099104 ETH
+Estimated amount required: 0.000011430568452154 ETH
 
 ==========================
 
