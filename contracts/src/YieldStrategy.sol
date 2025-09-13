@@ -239,4 +239,75 @@ contract YieldStrategy is ReentrancyGuard, Ownable {
         uint256 currentBalance = IERC20(token).balanceOf(address(this));
         return currentBalance;
     }
+
+    // ============ PUBLIC USER FUNCTIONS ============
+    
+    /**
+     * @dev Public deposit function for users
+     * @param token Token to deposit
+     * @param amount Amount to deposit
+     * @param protocol DeFi protocol to use
+     * @param apy Expected APY in basis points
+     */
+    function depositPublic(
+        address token,
+        uint256 amount,
+        string memory protocol,
+        uint256 apy
+    ) external onlySupportedToken(token) nonReentrant {
+        require(amount > 0, "Amount must be positive");
+        require(apy > 0, "APY must be positive");
+        
+        IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
+        
+        totalDeposits[token] += amount;
+        
+        YieldPosition memory position = YieldPosition({
+            token: token,
+            amount: amount,
+            timestamp: block.timestamp,
+            protocol: protocol,
+            apy: apy
+        });
+        
+        positions[token].push(position);
+        
+        emit Deposit(token, amount, protocol);
+    }
+
+    /**
+     * @dev Public withdraw function for users
+     * @param token Token to withdraw
+     * @param amount Amount to withdraw
+     * @return actualAmount Actual amount withdrawn
+     * @return yieldAmount Yield amount generated
+     */
+    function withdrawPublic(address token, uint256 amount) 
+        external 
+        onlySupportedToken(token) 
+        nonReentrant 
+        returns (uint256 actualAmount, uint256 yieldAmount) 
+    {
+        require(amount > 0, "Amount must be positive");
+        
+        uint256 availableBalance = IERC20(token).balanceOf(address(this));
+        require(availableBalance >= amount, "Insufficient balance");
+        
+        // Calculate yield (simplified - in real implementation, this would be more complex)
+        uint256 timeElapsed = block.timestamp - positions[token][0].timestamp;
+        uint256 yieldRate = positions[token][0].apy;
+        yieldAmount = (amount * yieldRate * timeElapsed) / (365 days * 10000); // APY in basis points
+        
+        actualAmount = amount;
+        uint256 totalAmount = actualAmount + yieldAmount;
+        
+        totalWithdrawals[token] += amount;
+        totalYield[token] += yieldAmount;
+        
+        IERC20(token).safeTransfer(msg.sender, totalAmount);
+        
+        emit Withdrawal(token, actualAmount, yieldAmount);
+        
+        return (actualAmount, yieldAmount);
+    }
 }

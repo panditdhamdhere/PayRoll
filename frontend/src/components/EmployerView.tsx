@@ -210,13 +210,13 @@ export function EmployerView() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-black dark:text-gray-700 mb-2">Total Amount (wei)</label>
+            <label className="block text-sm font-medium text-black dark:text-gray-700 mb-2">Total Amount (USDC units)</label>
             <input
               value={totalAmount}
               onChange={(e) => setTotalAmount(e.target.value.replace(/\D/g, ''))}
               type="text"
               className="w-full px-3 py-2 rounded-lg border border-gray-300/50 dark:border-gray-600/50 bg-white/90 dark:bg-gray-800/90 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
-              placeholder="1000000000000000000"
+              placeholder="1000000 (1 USDC)"
             />
           </div>
         </div>
@@ -232,10 +232,10 @@ export function EmployerView() {
           <button
             className="px-4 py-2 rounded-lg bg-gray-600 text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 focus:ring-offset-white/60 dark:focus:ring-offset-black/40 shadow-lg font-medium text-sm"
             onClick={() => {
-              setTotalAmount('1000000000000000000'); // 1 token in wei
+              setTotalAmount('1000000'); // 1 USDC (6 decimals)
             }}
           >
-            Set 1 Token
+            Set 1 USDC
           </button>
           <button
             className="px-4 py-2 rounded-lg bg-yellow-600 text-white hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 focus:ring-offset-white/60 dark:focus:ring-offset-black/40 shadow-lg font-medium text-sm"

@@ -52,6 +52,31 @@ const YIELD_ABI = [
     "type": "function"
   },
   {
+    "inputs": [
+      {"internalType": "address", "name": "token", "type": "address"},
+      {"internalType": "uint256", "name": "amount", "type": "uint256"},
+      {"internalType": "string", "name": "protocol", "type": "string"},
+      {"internalType": "uint256", "name": "apy", "type": "uint256"}
+    ],
+    "name": "depositPublic",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {"internalType": "address", "name": "token", "type": "address"},
+      {"internalType": "uint256", "name": "amount", "type": "uint256"}
+    ],
+    "name": "withdrawPublic",
+    "outputs": [
+      {"internalType": "uint256", "name": "actualAmount", "type": "uint256"},
+      {"internalType": "uint256", "name": "yieldAmount", "type": "uint256"}
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [{"internalType": "address", "name": "token", "type": "address"}],
     "name": "totalDeposits",
     "outputs": [{"internalType": "uint256", "name": "", "type": "uint256"}],
@@ -128,20 +153,41 @@ export function useYieldContract() {
   });
 
   const deposit = (token: `0x${string}`, amount: bigint, protocol: string, apy: bigint) => {
-    writeContract({
+    return writeContract({
       address: CONTRACT_ADDRESSES.YIELD_STRATEGY as `0x${string}`,
       abi: YIELD_ABI,
-      functionName: 'deposit',
+      functionName: 'depositPublic',
       args: [token, amount, protocol, apy],
     });
   };
 
   const withdraw = (token: `0x${string}`, amount: bigint) => {
-    writeContract({
+    return writeContract({
       address: CONTRACT_ADDRESSES.YIELD_STRATEGY as `0x${string}`,
       abi: YIELD_ABI,
-      functionName: 'withdraw',
+      functionName: 'withdrawPublic',
       args: [token, amount],
+    });
+  };
+
+  // Token approval function for yield strategy
+  const approveToken = (tokenAddress: `0x${string}`, amount: bigint) => {
+    return writeContract({
+      address: tokenAddress,
+      abi: [
+        {
+          "inputs": [
+            {"internalType": "address", "name": "spender", "type": "address"},
+            {"internalType": "uint256", "name": "amount", "type": "uint256"}
+          ],
+          "name": "approve",
+          "outputs": [{"internalType": "bool", "name": "", "type": "bool"}],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }
+      ],
+      functionName: 'approve',
+      args: [CONTRACT_ADDRESSES.YIELD_STRATEGY as `0x${string}`, amount],
     });
   };
 
@@ -157,5 +203,6 @@ export function useYieldContract() {
     // Write functions
     deposit,
     withdraw,
+    approveToken,
   };
 }

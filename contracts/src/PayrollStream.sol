@@ -245,8 +245,10 @@ contract PayrollStream is ReentrancyGuard, Ownable, Pausable {
         uint256 employeeId,
         address token,
         uint256 totalAmount
-    ) external onlyActiveEmployee(employeeId) returns (uint256 streamId) {
+    ) external returns (uint256 streamId) {
         Employee memory employee = employees[employeeId];
+        require(employee.recipient != address(0), "Employee does not exist");
+        require(employee.isActive, "Employee not active");
         require(block.timestamp >= employee.startTime, "Stream not started");
         require(block.timestamp < employee.endTime, "Stream ended");
         require(totalAmount > 0, "Amount must be positive");

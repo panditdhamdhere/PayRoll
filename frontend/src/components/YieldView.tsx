@@ -8,7 +8,7 @@ import { toast } from 'sonner';
 
 export function YieldView() {
   const { address } = useAccount();
-  const { deposit, withdraw, getTotalYield, getAvailableBalance } = useYieldContract();
+  const { deposit, withdraw, approveToken, getTotalYield, getAvailableBalance } = useYieldContract();
 
   const [token, setToken] = useState(SUPPORTED_TOKENS.USDC.address);
   const [amount, setAmount] = useState('');
@@ -63,16 +63,52 @@ export function YieldView() {
             className="px-3 py-2 rounded-lg border border-gray-300/50 dark:border-gray-600/50 bg-white/90 dark:bg-gray-800/90 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
           />
         </div>
-        <div className="mt-4 flex gap-3">
+        <div className="mt-4 flex gap-3 flex-wrap">
+          <button
+            className="px-3 py-2 text-sm bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+            onClick={() => {
+              setToken('0x036CbD53842c5426634e7929541eC2318f3dCF7e'); // USDC on Base Sepolia
+            }}
+          >
+            Use USDC
+          </button>
+          <button
+            className="px-3 py-2 text-sm bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+            onClick={() => {
+              setAmount('1000000'); // 1 USDC (6 decimals)
+            }}
+          >
+            Set 1 USDC
+          </button>
+          <button
+            className="px-3 py-2 text-sm bg-yellow-600 text-white rounded-lg hover:bg-yellow-700"
+            disabled={!token || !amount}
+            onClick={async () => {
+              try {
+                toast.loading('Approving token...', { id: 'approve-yield-token' });
+                console.log('Approving token for yield:', { token, amount });
+                await approveToken(token as `0x${string}`, BigInt(amount));
+                toast.success('Token approved for yield!', { id: 'approve-yield-token' });
+              } catch (err: unknown) {
+                console.error('Approve token error:', err);
+                const error = err as { shortMessage?: string; message?: string };
+                toast.error(`Approve failed: ${error?.shortMessage || error?.message || 'Failed to approve token'}`, { id: 'approve-yield-token' });
+              }
+            }}
+          >
+            Approve Token
+          </button>
           <button
             className="px-4 py-2 rounded-lg bg-green-600 text-white hover:bg-green-700 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 focus:ring-offset-white/60 dark:focus:ring-offset-black/40 shadow-lg font-medium"
             disabled={!token || !amount}
             onClick={async () => {
               try {
                 toast.loading('Depositing...', { id: 'deposit' });
+                console.log('Depositing:', { token, amount, protocol, apy });
                 await deposit(token as `0x${string}`, BigInt(amount), protocol, BigInt(apy || '0'));
                 toast.success('Deposit submitted', { id: 'deposit' });
               } catch (err: unknown) {
+                console.error('Deposit error:', err);
                 const error = err as { shortMessage?: string; message?: string };
                 toast.error(error?.shortMessage || error?.message || 'Deposit failed', { id: 'deposit' });
               }
@@ -86,9 +122,11 @@ export function YieldView() {
             onClick={async () => {
               try {
                 toast.loading('Withdrawing...', { id: 'withdraw' });
+                console.log('Withdrawing:', { token, amount });
                 await withdraw(token as `0x${string}`, BigInt(amount));
                 toast.success('Withdraw submitted', { id: 'withdraw' });
               } catch (err: unknown) {
+                console.error('Withdraw error:', err);
                 const error = err as { shortMessage?: string; message?: string };
                 toast.error(error?.shortMessage || error?.message || 'Withdraw failed', { id: 'withdraw' });
               }
@@ -103,13 +141,13 @@ export function YieldView() {
         <div className="rounded-lg p-6 border border-gray-200/50 dark:border-gray-700/50 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl shadow-lg">
           <p className="text-sm text-green-700 dark:text-green-400 font-medium">Available Balance</p>
           <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
-            {token ? (availableBalance.data ? (Number(availableBalance.data as bigint) / 1e18).toFixed(6) : '—') : '—'}
+            {token ? (availableBalance.data ? (Number(availableBalance.data as bigint) / 1e6).toFixed(6) : '—') : '—'}
           </p>
         </div>
         <div className="rounded-lg p-6 border border-gray-200/50 dark:border-gray-700/50 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl shadow-lg">
           <p className="text-sm text-blue-700 dark:text-blue-400 font-medium">Total Yield Generated</p>
           <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">
-            {token ? (totalYield.data ? (Number(totalYield.data as bigint) / 1e18).toFixed(6) : '—') : '—'}
+            {token ? (totalYield.data ? (Number(totalYield.data as bigint) / 1e6).toFixed(6) : '—') : '—'}
           </p>
         </div>
       </div>

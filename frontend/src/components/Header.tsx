@@ -3,10 +3,17 @@
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi';
 import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
 
 export function Header() {
   const { isConnected } = useAccount();
   const { theme, setTheme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  // Prevent hydration mismatch by only rendering theme-dependent content after mount
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <header className="sticky top-0 z-50">
@@ -23,18 +30,18 @@ export function Header() {
           </a>
 
           <nav className="hidden md:flex items-center gap-5">
-            <a href="#features" className="font-extrabold" style={{ color: (resolvedTheme ?? theme) === 'dark' ? 'white' : 'black' }}>Features</a>
-            <a href="#how-it-works" className="font-extrabold" style={{ color: (resolvedTheme ?? theme) === 'dark' ? 'white' : 'black' }}>How it Works</a>
-            <a href="#docs" className="font-extrabold" style={{ color: (resolvedTheme ?? theme) === 'dark' ? 'white' : 'black' }}>Docs</a>
+            <a href="#features" className="font-extrabold text-gray-900 dark:text-white">Features</a>
+            <a href="#how-it-works" className="font-extrabold text-gray-900 dark:text-white">How it Works</a>
+            <a href="#docs" className="font-extrabold text-gray-900 dark:text-white">Docs</a>
           </nav>
 
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-3 shrink-0" suppressHydrationWarning>
             <button
               aria-label="Toggle theme"
-              onClick={() => setTheme((resolvedTheme ?? theme) === 'dark' ? 'light' : 'dark')}
+              onClick={() => setTheme(mounted && (resolvedTheme ?? theme) === 'dark' ? 'light' : 'dark')}
               className="h-9 w-9 rounded-md border border-gray-300/60 dark:border-gray-700/60 flex items-center justify-center text-gray-800 dark:text-gray-200 hover:bg-black/5 dark:hover:bg-white/5"
             >
-              {(resolvedTheme ?? theme) === 'dark' ? '🌙' : '☀️'}
+              {mounted ? ((resolvedTheme ?? theme) === 'dark' ? '🌙' : '☀️') : '🌙'}
             </button>
             <div className="scale-95 sm:scale-100">
               <ConnectButton />

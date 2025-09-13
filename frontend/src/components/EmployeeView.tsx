@@ -34,6 +34,14 @@ export function EmployeeView() {
     query: { enabled: !!employeeIdInput && streamIds.length > 0 },
   });
 
+  // Debug logging (only on client side, after variables are declared)
+  if (typeof window !== 'undefined') {
+    console.log('EmployeeView - address:', address);
+    console.log('EmployeeView - employeeStreams:', employeeStreams);
+    console.log('EmployeeView - streamData:', streamData.data);
+    console.log('EmployeeView - claimableData:', claimableData.data);
+  }
+
   const loading = streamData.isLoading || claimableData.isLoading;
 
   const displayStreams = useMemo(() => {
@@ -52,8 +60,8 @@ export function EmployeeView() {
         id: Number(id),
         employer: stream ? stream[6] : '—',
         token: stream ? stream[5] : '—',
-        salaryPerSecond: '—',
-        totalEarned: '—',
+        salaryPerSecond: stream ? (Number(stream[1]) / 1e6).toFixed(6) : '—', // Convert from wei to USDC
+        totalEarned: stream ? (Number(stream[0]) / 1e6).toFixed(6) : '—', // Convert from wei to USDC
         claimable,
         startTime: stream ? Number(stream[2]) : 0,
         endTime: stream ? Number(stream[3]) : 0,
@@ -73,6 +81,12 @@ export function EmployeeView() {
             placeholder="Employee ID"
             className="px-3 py-2 rounded-lg text-sm w-36 border border-gray-300/50 dark:border-gray-600/50 bg-white/90 dark:bg-gray-800/90 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
           />
+          <button
+            onClick={() => window.location.reload()}
+            className="px-3 py-2 text-sm bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+          >
+            Refresh
+          </button>
           <button
             disabled={!employeeIdInput || displayStreams.length === 0}
             className="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 focus:ring-offset-white/60 dark:focus:ring-offset-black/40"
@@ -130,7 +144,7 @@ export function EmployeeView() {
                 </div>
                 <div>
                   <p className="text-sm text-black dark:text-gray-600">Claimable</p>
-                  <p className="font-semibold text-green-600">{typeof stream.claimable === 'bigint' ? (Number(stream.claimable) / 1e18).toFixed(6) : stream.claimable} {stream.token}</p>
+                  <p className="font-semibold text-green-600">{typeof stream.claimable === 'bigint' ? (Number(stream.claimable) / 1e6).toFixed(6) : stream.claimable} USDC</p>
                 </div>
               </div>
 
@@ -154,7 +168,7 @@ export function EmployeeView() {
                     }
                   }}
                 >
-                  Claim {typeof stream.claimable === 'bigint' ? (Number(stream.claimable) / 1e18).toFixed(6) : stream.claimable} {stream.token}
+                  Claim {typeof stream.claimable === 'bigint' ? (Number(stream.claimable) / 1e6).toFixed(6) : stream.claimable} USDC
                 </button>
               </div>
             </div>
